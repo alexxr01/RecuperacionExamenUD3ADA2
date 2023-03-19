@@ -11,15 +11,15 @@ import me.alejandro.entidades.Asignatura;
 import me.alejandro.entidades.Profesor;
 
 public class TestEjercicios {
+	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("miBD");
+	private static EntityManager em = emf.createEntityManager();
+	
 	public static void main(String[] args) {
-		apartadoA();
+//		apartadoB();
+		apartadoC();
 	}
 
-	public static void apartadoA() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("miBD");
-		EntityManager em = emf.createEntityManager();
-
-
+	public static void apartadoB() {
 		// Lista de profesores
 		Profesor profesor1 = new Profesor(1, "Celso Espada Ferrando", "Mañana");
 		Profesor profesor2 = new Profesor(2, "Valeria Peiró Marquez", "Mañana");
@@ -111,32 +111,15 @@ public class TestEjercicios {
 
 	}
 
-	public static void apartadoB() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("miBD");
-		EntityManager em = emf.createEntityManager();
-
-		// SQL: SELECT NOMA FROM alumnos alum, alumnos_asignaturas a_a, asignaturas asig WHERE alum.NMAT = a_a.Alumno_NMAT AND asig.CASIG = a_a.asignaturas_CASIG AND asig.DASIG = "Bases de Datos";
-		String consulta = "SELECT alum,asig FROM Alumno alum, Asignatura asig WHERE asig.alumno=alum AND asig.DASIG = 'Bases de Datos'";
-		Alumno resultado = (Alumno) em.createQuery(consulta).getSingleResult();
-
-		System.out.println(resultado);
-
-		em.close();
-
-	}
-
 	public static void apartadoC() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("miBD");
+		Alumno alumno7 = em.find(Alumno.class, 7);
+		List<Asignatura> asignaturasMatriculadas = alumno7.getAsignaturas();
 
-		EntityManager em = emf.createEntityManager();
+		System.out.println("Asignaturas en las que está matriculado el 7:");
+		for (Asignatura asignatura : asignaturasMatriculadas) {
+		    System.out.println(asignatura.getDASIG());
+		}
 
-		em.getTransaction().begin();
-
-		Profesor profesor = em.find(Profesor.class, 1);
-
-		profesor.setNOMP("profesor 4");
-
-		em.getTransaction().commit();
 	}
 
 }
